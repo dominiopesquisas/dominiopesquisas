@@ -35,8 +35,8 @@ body {
 .circle {
   background-color: #aaa;
   border-radius: 50%;
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   overflow: hidden;
   position: relative;
 	align-self: center;
