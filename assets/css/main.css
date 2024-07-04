@@ -32,6 +32,22 @@ body {
 	line-height: 1;
 }
 
+.circle {
+  background-color: #aaa;
+  border-radius: 50%;
+  width: 300px;
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+	align-self: center;
+}
+
+.circle img {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
 ol, ul {
 	list-style: none;
 }
