@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<link rel="shortcut icon" href="images/favicon.ico" />
+	<head>
+		<title>Domínio Pesquisas</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+					<!-- Wrapper -->
+					<section id="one" class="wrapper fade-up">
+						<div class="inner">
+							<h2>Textos</h2>
+							<div class="features">
+								<section>
+									<h2>Mensagem Grupo Geral</h2>
+									<div class="">
+										<div class="">
+												<label for="nome">Nome:</label>
+												<select id="nome">
+														<option value="Denise">Denise</option>
+														<option value="Dayse">Dayse</option>
+														<option value="Caroline">Caroline</option>
+														<option value="Marcos Jr.">Marcos Jr.</option>
+												</select>
+										</div>
+										<div class="">
+												<label for="cidade">Cidade:</label>
+												<input type="text" id="cidade">
+										</div>
+										<div class="">
+												<label for="data">Data:</label>
+												<input type="date" id="data">
+										</div>
+										<div class="">
+												<label for="horario">Horário:</label>
+												<input type="time" id="horario">
+										</div>
+										<div class="">
+												<label for="local">Local aproximado:</label>
+												<input type="text" id="local">
+										</div>
+										<div class="">
+												<label for="valor">Valor:</label>
+												<input type="number" id="valor" min="0" step="0.01">
+										</div>
+										<br>
+										<button onclick="generateText()">Gerar Texto</button>
+										<button onclick="copyText('outputText')">Copiar Texto</button>
+										<br>
+										<br>
+										<div class="" id="outputText">
+												*Olá 🌻*<br><br>
+												*Meu nome é <span id="outputNome">&lt;Nome&gt;</span> da Domínio Pesquisas. Esse grupo é referente à pesquisa presencial remunerada sobre <span id="outputCidade">&lt;Cidade&gt;</span> que vocês fizeram a inscrição.*<br><br>
+												*Analisamos os cadastros e conseguimos encaixar vocês neste grupo que será dia <span id="outputDia">&lt;Dia&gt;</span>/<span id="outputMes">&lt;Mês&gt;</span> - <span id="outputHorario">&lt;Horário&gt;</span>h em <span id="outputLocal">&lt;Local aproximado&gt;</span>.*<br><br>
+												*A reunião terá duração de 1h30 a 2 h e todos precisam ficar até o final para receber o incentivo de R$<span id="outputValor">&lt;Valor&gt;</span> no final da pesquisa.*<br><br>
+												*Não pode ter atraso nem faltar pois convidamos 10 pessoas para cada grupo e, se faltar alguém, prejudica a dinâmica da pesquisa e tira a oportunidade de outras pessoas que também fizeram a inscrição.*<br><br>
+												*Não podem participar, no mesmo dia e horário, parentes e amigos. Recebemos vários cadastros por indicação. Não conhecemos as pessoas que foram indicadas. Por isso pedimos que se houver alguém que conheçam, nos avisem no privado.*<br><br>
+												*Os clientes estarão lá e se verem alguém chegando junto não deixam participar da pesquisa e não consigo pagar quem não participar.*<br><br>
+												*Não pode levar criança e, se for algum acompanhante, terá que ficar na recepção até a pesquisa acabar.*<br><br>
+												*Lembrando que é uma pesquisa presencial e o incentivo só será pago às pessoas que chegarem a tempo e participarem da discussão até o fim. Quem se atrasar, infelizmente, não receberá o incentivo.*<br><br>
+												*Peço que todos confirmem o quanto antes para que eu tenha tempo de substituir caso algum de vocês não possa na data agendada.*<br><br>
+												*Conto com a confirmação de todos.*<br><br>
+												*Obrigada 🤗*
+										</div>
+								</div>
+								</section>
+								<section>
+									<h2>Mensagem Grupo Profissões Banidas</h2>
+									<div class="" id="outputText2">
+									*ATENÇÂO*<br><br>
+										*Não podem ter parentes nem amigos muito intimos que trabalhem nestas profissões:*<br><br>
+										Agência de publicidade ou propaganda / Marketing<br>
+										Jornal, TV, revista, rádio<br>
+										Empresa ou Instituto de pesquisa de mercado e opinião<br><br>
+
+										Como funcionário Público Estadual / Municipal ou Federal<br>
+										(policial, agente de saúde, professora etc)<br><br>
+
+										Partido político (é filiado, fez panfletagem, fez boca de urna, trabalha ou já trabalhou para políticos como vereadores etc)<br><br>
+
+										Direção de sindicato (é membro?)<br><br>
+
+										Lideranças comunitárias (faz parte de alguma?)<br><br>
+										*Se tiverem não mencionem na pesquisa por favor*
+									</div>
+									<br>
+									<button onclick="copyText('outputText2')">Copiar Texto</button>
+								</section>
+								<section>
+
+								</section>
+								<section>
+
+								</section>
+							</div>
+						</div>
+					</section>
+
+
+					<script>
+    function generateText() {
+        const data = new Date(document.getElementById('data').value);
+        const dia = String(data.getDate()).padStart(2, '0');
+        const mes = String(data.getMonth() + 1).padStart(2, '0');
+
+        document.getElementById('outputNome').innerText = document.getElementById('nome').value;
+        document.getElementById('outputCidade').innerText = document.getElementById('cidade').value;
+        document.getElementById('outputDia').innerText = dia;
+        document.getElementById('outputMes').innerText = mes;
+        document.getElementById('outputHorario').innerText = document.getElementById('horario').value;
+        document.getElementById('outputLocal').innerText = document.getElementById('local').value;
+        document.getElementById('outputValor').innerText = parseFloat(document.getElementById('valor').value).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function copyText(elementId) {
+        const range = document.createRange();
+        range.selectNode(document.getElementById(elementId));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand("copy");
+        window.getSelection().removeAllRanges();
+        alert("Texto copiado para a área de transferência!");
+    }
+</script>
+
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
