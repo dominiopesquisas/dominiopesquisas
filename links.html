@@ -15,18 +15,37 @@
 	</head>
 	<body class="is-preload">
 					<!-- Wrapper -->
-					<section id="one" class="wrapper fade-up">
+					<section id="one" class="wrapper fade-up special">
 						<div class="inner">
-							<h2>Links</h2>
+							<h1>Links</h1>
 							<div class="features">
-							<section id="one" class="wrapper fade-up">
-								<a href="http://dominiopesquisas.com.br/precadastro" target="_blank">dominiopesquisas.com.br/precadastro</a>
-								<a href="http://dominiopesquisas.com.br/blumenau" target="_blank">dominiopesquisas.com.br/blumenau</a>
+							<section class="wrapper fade-up special">
+									<h3>Formulário de Pré Cadastro</h3>
+									<a id="precadastro" href="http://dominiopesquisas.com.br/precadastro" target="_blank">dominiopesquisas.com.br/precadastro</a>
+									<button onclick="copyText('precadastro')">Copiar Link</button>
 							</section>
+							<section class="wrapper fade-up special">
+								<h3>Formulário Blumenau - SC</h3>
+								<a id="blumenau" href="http://dominiopesquisas.com.br/blumenau" target="_blank">dominiopesquisas.com.br/blumenau</a>
+								<button onclick="copyText('blumenau')">Copiar Link</button>
+							</div>
+							</section>
+							</div>
 						</div>
-					</div>
+				</section>
 
 		<!-- Scripts -->
+			<script>
+				function copyText(elementId) {
+						const tempInput = document.createElement("input");
+						tempInput.value = document.getElementById(elementId).href;
+						document.body.appendChild(tempInput);
+						tempInput.select();
+						document.execCommand("copy");
+						document.body.removeChild(tempInput);
+						alert("Link copiado para a área de transferência!");
+				}
+			</script>
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/jquery.scrollex.min.js"></script>
 			<script src="assets/js/jquery.scrolly.min.js"></script>
