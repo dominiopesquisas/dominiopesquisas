@@ -1,52 +1,38 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exibição de Dados da Planilha</title>
-</head>
-<body>
-    <h2>Dados da Planilha</h2>
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<link rel="shortcut icon" href="images/favicon.ico" />
+	<head>
+		<title>Domínio Pesquisas</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+					<!-- Wrapper -->
+			<div id="wrapper">
+				<!-- Intro -->
+					<section id="intro" class="wrapper fullscreen fade-up special">
+						<div class="inner">
+							<p><img src="images/logotipo-branco.png" height="300" width="300"></p>
+							<H1>Bem-vindo(a)</h1>
+							<iframe src="https://onedrive.live.com/embed?resid=7275FDA1837FD541%21816&authkey=!AJIAgg9DhNODOSg&em=2" width="750" height="1100" frameborder="0" scrolling="no"></iframe>
+						</div>
+					</section>
+					
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
 
-    <div id="tabela-dados"></div>
-
-    <script>
-        function baixarArquivo() {
-            var url = 'https://onedrive.live.com/download?resid=7275FDA1837FD541%21544&authkey=!AN5y1-y_Lg61BGE&em=2';
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', url, true);
-            xhr.responseType = 'blob';
-
-            xhr.onload = function() {
-                var blob = xhr.response;
-                var reader = new FileReader();
-
-                reader.onload = function() {
-                    var text = reader.result;
-                    var data = text.split('\n');
-                    
-                    var table = '<table border="1">';
-                    for (var i = 0; i < data.length; i++) {
-                        table += '<tr>';
-                        var row = data[i].split(',');
-                        for (var j = 0; j < row.length; j++) {
-                            table += '<td>' + row[j] + '</td>';
-                        }
-                        table += '</tr>';
-                    }
-                    table += '</table>';
-
-                    document.getElementById('tabela-dados').innerHTML = table;
-                };
-
-                reader.readAsText(blob);
-            };
-
-            xhr.send();
-        }
-    </script>
-
-    <button onclick="baixarArquivo()">Exibir Dados da Planilha</button>
-</body>
+	</body>
 </html>
