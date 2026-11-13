@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-base="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cadastro para pesquisas remuneradas | Domínio Pesquisas</title>
+  <meta name="description" content="Cadastre-se gratuitamente para participar de pesquisas remuneradas da Domínio Pesquisas.">
+  <meta name="theme-color" content="#0a2238">
+  <link rel="canonical" href="https://dominiopesquisas.com.br/cadastro/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Cadastro para pesquisas remuneradas | Domínio Pesquisas">
+  <meta property="og:description" content="Leva cerca de 3 minutos. Cadastro gratuito.">
+  <meta property="og:image" content="https://dominiopesquisas.com.br/assets/img/og-image.jpg">
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="../assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://servicodados.ibge.gov.br">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#form-cadastro">Pular para o formulário</a>
+
+  <header class="simple-header">
+    <div class="container">
+      <a class="brand" href="../" aria-label="Domínio Pesquisas – início"><img src="../assets/img/logo-branco.png" alt="Domínio Pesquisas" width="108" height="38"></a>
+      <a class="back-link" href="../"><svg aria-hidden="true"><use href="../assets/img/icons.svg#i-arrow-left"></use></svg>Voltar ao site</a>
+    </div>
+  </header>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Cadastro de participantes</span>
+      <h1>Cadastre-se para pesquisas remuneradas</h1>
+      <p>Preencha seus dados para receber convites de pesquisas que combinam com o seu perfil.</p>
+      <ul class="meta">
+        <li><svg aria-hidden="true"><use href="../assets/img/icons.svg#i-clock"></use></svg>Cerca de 3 minutos</li>
+        <li><svg aria-hidden="true"><use href="../assets/img/icons.svg#i-check"></use></svg>Gratuito</li>
+        <li><svg aria-hidden="true"><use href="../assets/img/icons.svg#i-lock"></use></svg>Dados protegidos (LGPD)</li>
+      </ul>
+    </div>
+  </section>
+
+  <main class="page-body">
+    <div class="container">
+      <div class="page-card" id="card">
+        <div class="project-banner" id="banner-projeto" hidden>
+          <svg aria-hidden="true"><use href="../assets/img/icons.svg#i-info"></use></svg>
+          <div>Você está se inscrevendo para: <strong id="nome-projeto"></strong></div>
+        </div>
+
+        <div class="alert alert--error" id="alerta" role="alert">
+          <svg aria-hidden="true"><use href="../assets/img/icons.svg#i-alert"></use></svg>
+          <div id="alerta-texto"></div>
+        </div>
+
+        <form id="form-cadastro" novalidate>
+          <!-- 1. Sobre você -->
+          <fieldset class="form-section">
+            <legend><span class="num">1</span>Sobre você</legend>
+            <div class="grid grid-2">
+              <div class="field span-2">
+                <label for="nome">Nome completo</label>
+                <input class="input" id="nome" name="nome" type="text" autocomplete="name" required minlength="5"
+                       data-msg="Informe seu nome completo.">
+                <span class="error-msg"></span>
+              </div>
+              <div class="field">
+                <label for="nascimento">Data de nascimento</label>
+                <input class="input" id="nascimento" name="nascimento" type="date" autocomplete="bday" required min="1920-01-01"
+                       data-msg="Informe uma data de nascimento válida.">
+                <span class="error-msg"></span>
+              </div>
+              <div class="field">
+                <label for="religiao">Religião</label>
+                <select class="select" id="religiao" name="religiao" required data-msg="Selecione uma opção.">
+                  <option value="">Selecione</option>
+                  <option>Católica</option>
+                  <option>Evangélica</option>
+                  <option>Espírita</option>
+                  <option>Umbanda / Candomblé</option>
+                  <option>Sem religião</option>
+                  <option>Ateu / Agnóstico</option>
+                  <option value="__outra">Outra</option>
+                  <option>Prefiro não informar</option>
+                </select>
+                <span class="error-msg"></span>
+              </div>
+              <div class="field span-2 reveal-box" data-show-if="religiao=__outra">
+                <label for="religiao_outra">Qual religião?</label>
+                <input class="input" id="religiao_outra" name="religiao_outra" type="text" required data-msg="Escreva sua religião.">
+                <span class="error-msg"></span>
+              </div>
+              <div class="field span-2" role="radiogroup" aria-labelledby="lbl-genero">
+                <span class="field-label" id="lbl-genero">Gênero</span>
+                <div class="choices">
+                  <label class="choice"><input type="radio" name="genero" value="Feminino" required data-msg="Selecione uma opção."><span>Feminino</span></label>
+                  <label class="choice"><input type="radio" name="genero" value="Masculino"><span>Masculino</span></label>
+                  <label class="choice"><input type="radio" name="genero" value="Não binário"><span>Não binário</span></label>
+                  <label class="choice"><input type="radio" name="genero" value="__outro"><span>Outro</span></label>
+                  <label class="choice"><input type="radio" name="genero" value="Prefiro não informar"><span>Prefiro não informar</span></label>
+                </div>
+                <span class="error-msg"></span>
+              </div>
+              <div class="field span-2 reveal-box" data-show-if="genero=__outro">
+                <label for="genero_outro">Como você se identifica?</label>
+                <input class="input" id="genero_outro" name="genero_outro" type="text" required data-msg="Preencha este campo.">
+                <span class="error-msg"></span>
+              </div>
+              <div class="field span-2" role="radiogroup" aria-labelledby="lbl-cor">
+                <span class="field-label" id="lbl-cor">Cor / raça <span class="opt">(classificação do IBGE)</span></span>
+                <div class="choices">
+                  <label class="choice"><input type="radio" name="cor_raca" value="Branca" required data-msg="Selecione uma opção."><span>Branca</span></label>
+                  <label class="choice"><input type="radio" name="cor_raca" value="Preta"><span>Preta</span></label>
+                  <label class="choice"><input type="radio" name="cor_raca" value="Parda"><span>Parda</span></label>
+                  <label class="choice"><input type="radio" name="cor_raca" value="Amarela"><span>Amarela</span></label>
+                  <label class="choice"><input type="radio" name="cor_raca" value="Indígena"><span>Indígena</span></label>
+                  <label class="choice"><input type="radio" name="cor_raca" value="Prefiro não informar"><span>Prefiro não informar</span></label>
+                </div>
+                <span class="error-msg"></span>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- 2. Estudo e trabalho -->
+          <fieldset class="form-section">
+            <legend><span class="num">2</span>Estudo e trabalho</legend>
+            <div class="grid grid-2">
+              <div class="field span-2">
+                <label for="escolaridade">Escolaridade</label>
+                <select class="select" id="escolaridade" name="escolaridade" required data-msg="Selecione sua escolaridade.">
+                  <option value="">Selecione</option>
+                  <option>Sem escolaridade</option>
+                  <option>Ensino fundamental incompleto</option>
+                  <option>Ensino fundamental completo</option>
+                  <option>Ensino médio incompleto</option>
+                  <option>Ensino médio completo</option>
+                  <option>Ensino técnico</option>
+                  <option>Ensino superior incompleto</option>
+                  <option>Ensino superior completo</option>
+                  <option>Pós-graduação / Especialização / MBA</option>
+                  <option>Mestrado</option>
+                  <option>Doutorado</option>
+                </select>
+                <span class="error-msg"></span>
+              </div>
+              <div class="field span-2" role="radiogroup" aria-labelledby="lbl-prof">
+                <span class="field-label" id="lbl-prof">Profissão / ocupação</span>
+                <div class="choices">
+                  <label class="choice"><input type="radio" name="profissao" value="Vendedor(a)" required data-msg="Selecione uma opção."><span>Vendedor(a)</span></label>
+                  <label class="choice"><input type="radio" name="profissao" value="Autônomo(a)"><span>Autônomo(a)</span></label>
+                  <label class="choice"><input type="radio" name="profissao" value="__outra"><span>Outra</span></label>
+                </div>
+                <span class="error-msg"></span>
+              </div>
+              <div class="field span-2 reveal-box" data-show-if="profissao=Vendedor(a)">
+                <label for="vendedor_o_que">O que você vende?</label>
+                <input class="input" id="vendedor_o_que" name="vendedor_o_que" type="text" required
+                       placeholder="Ex.: roupas, cosméticos, carros, seguros, alimentos" data-msg="Conte o que você vende.">
+                <span class="error-msg"></span>
+              </div>
+              <div class="field span-2 reveal-box" data-show-if="profissao=Autônomo(a)">
+                <label for="autonomo_o_que">O que você faz como autônomo(a)?</label>
+                <input class="input" id="autonomo_o_que" name="autonomo_o_que" type="text" required
+                       placeholder="Ex.: eletricista, manicure, motorista de aplicativo, confeiteira" data-msg="Conte o que você faz.">
+                <span class="error-msg"></span>
+              </div>
+              <div class="field span-2 reveal-box" data-show-if="profissao=__outra">
+                <label for="profissao_outra">Qual é a sua profissão?</label>
+                <input class="input" id="profissao_outra" name="profissao_outra" type="text" required data-msg="Escreva sua profissão.">
+                <span class="error-msg"></span>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- 3. Onde você mora -->
+          <fieldset class="form-section">
+            <legend><span class="num">3</span>Onde você mora</legend>
+            <div class="grid grid-3">
+              <div class="field">
+                <label for="estado">Estado</label>
+                <select class="select" id="estado" name="estado" required autocomplete="address-level1" data-msg="Selecione o estado.">
+                  <option value="">Selecione</option>
+                </select>
+                <span class="error-msg"></span>
+              </div>
+              <div class="field" id="f-cidade">
+                <label for="cidade">Cidade</label>
+                <select class="select" id="cidade" name="cidade" required disabled data-msg="Selecione a cidade.">
+                  <option value="">Escolha o estado</option>
+                </select>
+                <input class="input" id="cidade_texto" name="cidade_texto" type="text" required hidden disabled autocomplete="address-level2" data-msg="Informe a cidade.">
+                <span class="error-msg"></span>
+              </div>
+              <div class="field" id="f-bairro">
+                <label for="bairro">Bairro</label>
+                <select class="select" id="bairro" name="bairro" required disabled data-msg="Selecione o bairro.">
+                  <option value="">Escolha a cidade</option>
+                </select>
+                <input class="input" id="bairro_texto" name="bairro_texto" type="text" required hidden disabled data-msg="Informe o bairro.">
+                <span class="error-msg"></span>
+              </div>
+              <div class="field span-2 reveal-box" data-show-if="bairro=__outro">
+                <label for="bairro_outro">Qual bairro?</label>
+                <input class="input" id="bairro_outro" name="bairro_outro" type="text" required data-msg="Informe o bairro.">
+                <span class="error-msg"></span>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- 4. Onde você nasceu -->
+          <fieldset class="form-section">
+            <legend><span class="num">4</span>Onde você nasceu</legend>
+            <div class="grid grid-2">
+              <div class="field span-2" role="radiogroup" aria-labelledby="lbl-nasc">
+                <span class="field-label" id="lbl-nasc">Você nasceu no Brasil?</span>
+                <div class="choices">
+                  <label class="choice"><input type="radio" name="nasceu_brasil" value="Sim" required data-msg="Selecione uma opção."><span>Sim</span></label>
+                  <label class="choice"><input type="radio" name="nasceu_brasil" value="Não"><span>Não</span></label>
+                </div>
+                <span class="error-msg"></span>
+              </div>
+              <div class="field reveal-box" data-show-if="nasceu_brasil=Sim">
+                <label for="nat_estado">Estado onde nasceu</label>
+                <select class="select" id="nat_estado" name="nat_estado" required data-msg="Selecione o estado.">
+                  <option value="">Selecione</option>
+                </select>
+                <span class="error-msg"></span>
+              </div>
+              <div class="field reveal-box" data-show-if="nasceu_brasil=Sim" id="f-nat-cidade">
+                <label for="nat_cidade">Cidade onde nasceu</label>
+                <select class="select" id="nat_cidade" name="nat_cidade" required disabled data-msg="Selecione a cidade.">
+                  <option value="">Escolha o estado</option>
+                </select>
+                <input class="input" id="nat_cidade_texto" name="nat_cidade_texto" type="text" required hidden disabled data-msg="Informe a cidade.">
+                <span class="error-msg"></span>
+              </div>
+              <div class="field reveal-box" data-show-if="nasceu_brasil=Não">
+                <label for="nat_pais">País onde nasceu</label>
+                <input class="input" id="nat_pais" name="nat_pais" type="text" required autocomplete="country-name" data-msg="Informe o país.">
+                <span class="error-msg"></span>
+              </div>
+              <div class="field reveal-box" data-show-if="nasceu_brasil=Não">
+                <label for="nat_cidade_ext">Cidade onde nasceu</label>
+                <input class="input" id="nat_cidade_ext" name="nat_cidade_ext" type="text" required data-msg="Informe a cidade.">
+                <span class="error-msg"></span>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- 5. Família -->
+          <fieldset class="form-section">
+            <legend><span class="num">5</span>Família</legend>
+            <div class="grid grid-2">
+              <div class="field span-2" role="radiogroup" aria-labelledby="lbl-filhos">
+                <span class="field-label" id="lbl-filhos">Você tem filhos?</span>
+                <div class="choices">
+                  <label class="choice"><input type="radio" name="tem_filhos" value="Sim" required data-msg="Selecione uma opção."><span>Sim</span></label>
+                  <label class="choice"><input type="radio" name="tem_filhos" value="Não"><span>Não</span></label>
+                </div>
+                <span class="error-msg"></span>
+              </div>
+              <div class="field reveal-box" data-show-if="tem_filhos=Sim">
+                <label for="qtd_filhos">Quantos filhos?</label>
+                <select class="select" id="qtd_filhos" name="qtd_filhos" required data-msg="Selecione a quantidade.">
+                  <option value="">Selecione</option>
+                  <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+                  <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+                </select>
+                <span class="error-msg"></span>
+              </div>
+              <div class="field span-2" id="f-idades" hidden>
+                <span class="field-label">Idade de cada filho <span class="opt">(em anos; use 0 para menores de 1 ano)</span></span>
+                <div class="kids-ages" id="idades"></div>
+                <span class="error-msg"></span>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- 6. Renda e contato -->
+          <fieldset class="form-section">
+            <legend><span class="num">6</span>Renda e contato</legend>
+            <div class="grid grid-2">
+              <div class="field span-2">
+                <label for="renda">Renda familiar mensal</label>
+                <p class="hint">Soma da renda de todas as pessoas que moram na sua casa.</p>
+                <select class="select" id="renda" name="renda" required data-msg="Selecione uma faixa de renda.">
+                  <option value="">Selecione</option>
+                  <option>Até R$ 1.500</option>
+                  <option>De R$ 1.501 a R$ 3.000</option>
+                  <option>De R$ 3.001 a R$ 5.000</option>
+                  <option>De R$ 5.001 a R$ 8.000</option>
+                  <option>De R$ 8.001 a R$ 12.000</option>
+                  <option>De R$ 12.001 a R$ 20.000</option>
+                  <option>Acima de R$ 20.000</option>
+                  <option>Prefiro não informar</option>
+                </select>
+                <span class="error-msg"></span>
+              </div>
+              <div class="field">
+                <label for="telefone">Telefone / WhatsApp</label>
+                <input class="input" id="telefone" name="telefone" type="tel" inputmode="numeric" autocomplete="tel-national"
+                       placeholder="(41) 99999-9999" required pattern="\(\d{2}\) \d{4,5}-\d{4}" data-msg="Informe o telefone com DDD.">
+                <span class="error-msg"></span>
+              </div>
+              <div class="field">
+                <label for="email">E-mail</label>
+                <input class="input" id="email" name="email" type="email" autocomplete="email" placeholder="voce@email.com"
+                       required data-msg="Informe um e-mail válido.">
+                <span class="error-msg"></span>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="field" style="margin-bottom:24px">
+            <label class="consent">
+              <input type="checkbox" id="consentimento" name="consentimento" value="Sim" required data-msg="Para continuar, é preciso concordar.">
+              <p>Concordo que a <strong>Domínio Pesquisas</strong> use meus dados para me selecionar e convidar para pesquisas remuneradas, conforme a
+                <a href="../privacidade/" target="_blank" rel="noopener">política de privacidade</a>. Posso pedir a exclusão dos meus dados a qualquer momento.</p>
+            </label>
+            <span class="error-msg"></span>
+          </div>
+
+          <div class="hp" aria-hidden="true">
+            <label for="website">Não preencha este campo</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn--primary btn--lg btn--block" type="submit" id="btn-enviar">
+              Enviar cadastro <svg aria-hidden="true"><use href="../assets/img/icons.svg#i-arrow-right"></use></svg>
+            </button>
+            <p class="small">Seus dados ficam protegidos e não são compartilhados com terceiros.</p>
+          </div>
+        </form>
+
+        <div class="success" id="sucesso" hidden tabindex="-1">
+          <div class="success-icon"><svg aria-hidden="true"><use href="../assets/img/icons.svg#i-check"></use></svg></div>
+          <h2>Cadastro recebido!</h2>
+          <p>Obrigado, <span id="primeiro-nome"></span>. Vamos analisar seu perfil e entraremos em contato quando houver uma pesquisa para você. Enquanto isso, entre no nosso grupo do WhatsApp para acompanhar as novidades.</p>
+          <div class="hero-actions">
+            <a class="btn btn--primary" id="link-grupo" href="../grupowhatsapp/" target="_blank" rel="noopener">
+              <svg aria-hidden="true"><use href="../assets/img/icons.svg#i-whatsapp"></use></svg>Entrar no grupo do WhatsApp</a>
+            <a class="btn btn--outline" href="../">Voltar ao site</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer" style="padding-top:32px">
+    <div class="container">
+      <div class="footer-bottom" style="padding-top:0">
+        <span>© <span id="ano">2026</span> Domínio Pesquisas · <a href="mailto:contato@dominiopesquisas.com.br">contato@dominiopesquisas.com.br</a></span>
+        <a href="../privacidade/">Política de privacidade</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/projetos.js"></script>
+  <script src="../assets/js/bairros.js"></script>
+  <script src="../assets/js/site.js"></script>
+  <script src="../assets/js/cadastro.js"></script>
+</body>
+</html>
