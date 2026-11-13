@@ -36,8 +36,9 @@
 
   // Pesquisas abertas
   var list = document.getElementById('lista-projetos');
-  if (list) {
-    var projetos = (window.PROJETOS || []).filter(function (p) { return p.status !== 'encerrada'; });
+  if (list && window.carregarProjetos) window.carregarProjetos().then(pintarProjetos);
+  function pintarProjetos(projetos) {
+    list.removeAttribute('aria-busy');
     if (!projetos.length) {
       list.outerHTML =
         '<div class="empty-state"><h3>Nenhuma pesquisa com inscrição aberta agora</h3>' +
@@ -56,12 +57,12 @@
         var cta = aberta
           ? '<a class="btn btn--dark btn--block" href="cadastro/?projeto=' + encodeURIComponent(p.id) + '">Quero participar ' + icon('arrow-right') + '</a>'
           : '<span class="btn btn--outline btn--block" aria-disabled="true">Inscrições em breve</span>';
-        return '<article class="project reveal">' +
+        return '<article class="project is-visible">' +
           '<div class="project-head"><span class="project-place">' + icon('pin') + esc(p.local) + '</span>' +
           (aberta ? '<span class="pill pill--ok"><span class="dot"></span>Inscrições abertas</span>' : '<span class="pill pill--warn">Em breve</span>') +
           '</div>' +
           '<h3>' + esc(p.titulo) + '</h3>' +
-          '<p>' + esc(p.resumo) + '</p>' + chips +
+          (p.resumo ? '<p>' + esc(p.resumo) + '</p>' : '') + chips +
           (facts ? '<ul class="project-facts">' + facts + '</ul>' : '') +
           cta +
           '</article>';

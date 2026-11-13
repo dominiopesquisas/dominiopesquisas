@@ -1,24 +1,22 @@
 /**
  * PESQUISAS ABERTAS
- * Edite esta lista para mostrar/esconder pesquisas na página inicial.
+ * A lista agora vem do sistema (painel → projeto → aba Dados → "Divulgação no site").
+ * Para uma pesquisa aparecer no site: marque "Mostrar no site" e deixe o projeto como "Recrutando".
  *
- * Campos:
- *   id         identificador curto, sem espaços (vai junto no cadastro, para saber de qual pesquisa veio)
- *   status     'aberta' (aparece com o selo "Inscrições abertas"), 'em-breve' ou 'encerrada' (não aparece)
- *   titulo     título do card
- *   local      cidade/região
- *   resumo     texto curto explicando a pesquisa
- *   cidades    (opcional) lista de cidades aceitas
- *   quando     (opcional) datas
- *   incentivo  (opcional) valor pago ao participante
- *   requisito  (opcional) exigência importante
+ * Esta lista abaixo é só uma RESERVA, usada se o sistema não responder.
+ * Normalmente deve ficar vazia.
  */
-window.PROJETOS = [
-  {
-    id: 'londrina-pr',
-    status: 'aberta',
-    titulo: 'Pesquisa em Londrina',
-    local: 'Londrina – PR',
-    resumo: 'Exclusiva para quem mora em Londrina. Analisaremos sua ficha e, se você estiver dentro do perfil procurado, entraremos em contato.',
-  },
-];
+window.PROJETOS = [];
+
+/** Busca as pesquisas abertas no sistema (com reserva para a lista acima). */
+window.carregarProjetos = function () {
+  var url = (window.DP_CONFIG || {}).projetos;
+  var reserva = function () { return (window.PROJETOS || []).filter(function (p) { return p.status !== 'encerrada'; }); };
+  if (!url || !window.fetch) return Promise.resolve(reserva());
+  var ctrl = window.AbortController ? new AbortController() : null;
+  var t = setTimeout(function () { if (ctrl) ctrl.abort(); }, 15000);
+  return fetch(url, { signal: ctrl ? ctrl.signal : undefined })
+    .then(function (r) { return r.json(); })
+    .then(function (d) { clearTimeout(t); if (!d || !d.ok) throw new Error('sem dados'); return d.projetos || []; })
+    .catch(function () { clearTimeout(t); return reserva(); });
+};

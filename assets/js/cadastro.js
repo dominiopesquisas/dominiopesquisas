@@ -248,10 +248,15 @@
   /* ---------- Projeto (vindo do link ?projeto=...) ---------- */
   var params = new URLSearchParams(location.search);
   var projetoId = params.get('projeto') || '';
-  var projeto = (window.PROJETOS || []).filter(function (p) { return p.id === projetoId; })[0];
-  if (projeto) {
-    $('nome-projeto').textContent = projeto.titulo + ' (' + projeto.local + ')';
-    $('banner-projeto').hidden = false;
+  var projeto = null;
+  if (projetoId && window.carregarProjetos) {
+    window.carregarProjetos().then(function (lista) {
+      projeto = lista.filter(function (p) { return p.id === projetoId; })[0] || null;
+      if (projeto && !form.hidden) {
+        $('nome-projeto').textContent = projeto.titulo + (projeto.local ? ' (' + projeto.local + ')' : '');
+        $('banner-projeto').hidden = false;
+      }
+    });
   }
 
   /* ---------- Montagem dos dados ---------- */
@@ -264,7 +269,7 @@
     var nasceuBR = g('nasceu_brasil') === 'Sim';
     var uf = g('estado');
     return {
-      projeto: projeto ? projeto.titulo + ' (' + projeto.local + ')' : projetoId,
+      projeto: projeto ? projeto.titulo + (projeto.local ? ' (' + projeto.local + ')' : '') : projetoId,
       nome: g('nome'),
       nascimento: g('nascimento'),
       genero: outro('genero', '__outro', 'genero_outro'),
