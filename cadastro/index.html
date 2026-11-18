@@ -340,7 +340,16 @@
         <div class="success" id="sucesso" hidden tabindex="-1">
           <div class="success-icon"><svg aria-hidden="true"><use href="../assets/img/icons.svg#i-check"></use></svg></div>
           <h2>Cadastro recebido!</h2>
-          <p>Obrigado, <span id="primeiro-nome"></span>. Vamos analisar seu perfil e entraremos em contato quando houver uma pesquisa para você. Enquanto isso, entre no nosso grupo do WhatsApp para acompanhar as novidades.</p>
+          <p id="msg-sucesso">Obrigado, <span id="primeiro-nome"></span>. Vamos analisar seu perfil e entraremos em contato quando houver uma pesquisa para você. Enquanto isso, entre no nosso grupo do WhatsApp para acompanhar as novidades.</p>
+          <div class="hero-actions" id="passo-pesquisa" hidden>
+            <a class="btn btn--primary" id="link-convite" href="#">
+              <svg aria-hidden="true"><use href="../assets/img/icons.svg#i-clipboard"></use></svg>Responder as perguntas da pesquisa</a>
+          </div>
+          <div class="hero-actions" id="passo-app" hidden>
+            <a class="btn btn--outline" id="link-app" href="#" target="_blank" rel="noopener">
+              <svg aria-hidden="true"><use href="../assets/img/icons.svg#i-phone"></use></svg>Abrir o app da Domínio</a>
+          </div>
+          <p class="small" id="dica-app" hidden>No app você acompanha seus convites e recebe os avisos das pesquisas no celular. Guarde o link: ele é só seu.</p>
           <div class="hero-actions">
             <a class="btn btn--primary" id="link-grupo" href="../grupowhatsapp/" target="_blank" rel="noopener">
               <svg aria-hidden="true"><use href="../assets/img/icons.svg#i-whatsapp"></use></svg>Entrar no grupo do WhatsApp</a>

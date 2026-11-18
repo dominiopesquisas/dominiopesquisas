@@ -300,11 +300,24 @@
   /* ---------- Envio ---------- */
   var btn = $('btn-enviar');
   var btnHTML = btn.innerHTML;
-  function sucesso(nome) {
+  function sucesso(nome, res) {
+    res = res || {};
     form.hidden = true;
     $('banner-projeto').hidden = true;
     esconderAlerta();
-    $('primeiro-nome').textContent = (nome || '').split(' ')[0] || 'pelo cadastro';
+    var primeiro = (nome || '').split(' ')[0] || '';
+    var msg = $('msg-sucesso');
+    // já tinha cadastro: nada é trocado (a equipe confere o que veio diferente)
+    if (res.novo === false) {
+      msg.textContent = 'Obrigado' + (primeiro ? ', ' + primeiro : '') + '! Você já tinha cadastro com a gente. Para sua segurança, nada foi trocado automaticamente: nossa equipe confere os dados enviados. '
+        + (res.projeto ? 'Sua inscrição na pesquisa "' + res.projeto + '" foi registrada e vamos te mandar o convite pelo WhatsApp.' : 'Vamos entrar em contato quando houver uma pesquisa para você.');
+    } else if (res.convite) {
+      msg.textContent = 'Obrigado' + (primeiro ? ', ' + primeiro : '') + '! Agora falta pouco: responda as perguntas da pesquisa' + (res.projeto ? ' "' + res.projeto + '"' : '') + ' para a equipe ver se o seu perfil combina.';
+    } else {
+      $('primeiro-nome').textContent = primeiro || 'pelo cadastro';
+    }
+    if (res.convite) { $('link-convite').href = res.convite; $('passo-pesquisa').hidden = false; }
+    if (res.app) { $('link-app').href = res.app; $('passo-app').hidden = false; $('dica-app').hidden = false; }
     if (CONFIG.grupoWhatsapp) $('link-grupo').href = CONFIG.grupoWhatsapp;
     var s = $('sucesso');
     s.hidden = false;
@@ -346,7 +359,7 @@
       .then(function (r) { return r.json(); })
       .then(function (res) {
         if (!res || !res.ok) throw new Error((res && res.erro) || 'Falha no envio');
-        sucesso(d.nome);
+        sucesso(d.nome, res);
       })
       .catch(function () {
         mostrarAlerta('Não conseguimos enviar seu cadastro agora. Verifique sua internet e tente de novo. Se o problema continuar, fale com a gente pelo WhatsApp <a href="https://wa.me/5541995240324">(41) 99524-0324</a>.');
