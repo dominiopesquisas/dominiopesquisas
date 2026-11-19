@@ -19,10 +19,11 @@
 
   /* ---------- Ativar/desativar campos ----------
      Um campo só é validado e enviado se estiver habilitado. Ele fica desabilitado quando
-     está escondido (seção condicional fechada) ou quando o próprio script não o quer ativo. */
+     está escondido (seção condicional fechada), quando a equipe tirou a pergunta do formulário
+     (data-desligado) ou quando o próprio script não o quer ativo. */
   function apply(el) {
     var box = el.closest('.reveal-box');
-    var visible = !el.hidden && !(box && !box.classList.contains('is-shown'));
+    var visible = !el.hidden && !(box && !box.classList.contains('is-shown')) && !el.closest('[data-desligado]');
     el.disabled = !(visible && el._want !== false);
   }
   function setActive(el, want) { el._want = want; apply(el); }
@@ -222,8 +223,17 @@
       if (!ok && !primeiro) primeiro = el;
     });
     if (idadeAlguma) marcar(idadeRuim || idadeAlguma, !idadeRuim);
+    // perguntas de várias respostas obrigatórias: pelo menos uma marcada
+    form.querySelectorAll('[data-multipla][data-obrigatoria]').forEach(function (f) {
+      var caixas = f.querySelectorAll('input[type="checkbox"]');
+      if (!caixas.length || caixas[0].disabled) return;
+      var ok = grupoMarcado(f);
+      marcar(caixas[0], ok);
+      if (!ok && !primeiro) primeiro = caixas[0];
+    });
     return primeiro;
   }
+  function grupoMarcado(f) { return !!f.querySelector('input[type="checkbox"]:checked'); }
   form.addEventListener('input', revalidar);
   form.addEventListener('change', revalidar);
   function revalidar(e) {
@@ -234,6 +244,8 @@
       if (/^idade_/.test(el.name)) {
         var todos = Array.prototype.every.call(idadesBox.querySelectorAll('input'), valido);
         marcar(el, todos);
+      } else if (f.hasAttribute('data-multipla')) {
+        marcar(el, !f.hasAttribute('data-obrigatoria') || grupoMarcado(f));
       } else {
         marcar(el, valido(el));
       }
@@ -294,6 +306,8 @@
       consentimento: g('consentimento') === 'Sim' ? 'Sim' : 'Não',
       website: (document.getElementById('website').value || ''),
       origem: location.href,
+      extras: extrasPreenchidos(fd),
+      formularioVersao: versaoAplicada,
     };
   }
 
@@ -371,6 +385,133 @@
       });
   });
 
+  /* ---------- Formulário definido pela equipe no sistema ("Formulário do site") ----------
+     A página já traz o formulário completo; se o sistema responder, aplicamos por cima: textos e ajuda,
+     ordem dentro de cada parte, perguntas tiradas e perguntas novas. Se não responder, fica o formulário de sempre.
+     Aplicar é seguro de repetir (mantém o que a pessoa já digitou). */
+  var versaoAplicada = null;
+  var CHAVE_CACHE = 'dp_formulario_v1';
+
+  function el(tag, attrs, texto) {
+    var e = document.createElement(tag);
+    for (var k in attrs) if (attrs[k] != null && attrs[k] !== false) e.setAttribute(k, attrs[k] === true ? '' : attrs[k]);
+    if (texto != null) e.textContent = texto;
+    return e;
+  }
+  function blocoDe(id) { return form.querySelectorAll('[data-bloco="' + id + '"]'); }
+
+  /* texto e ajuda de uma pergunta padrão (guardamos o original para poder voltar) */
+  function aplicarTexto(principal, texto, ajuda) {
+    var rot = principal.querySelector('label, .field-label');
+    if (rot && texto) {
+      if (rot._orig == null) rot._orig = rot.textContent;
+      rot.textContent = texto;
+    }
+    var hint = principal.querySelector('.hint');
+    if (ajuda) {
+      if (!hint) { hint = el('p', { 'class': 'hint' }); rot ? rot.insertAdjacentElement('afterend', hint) : principal.prepend(hint); }
+      hint.textContent = ajuda; hint.hidden = false;
+    } else if (hint) hint.hidden = true;
+  }
+
+  /* pergunta nova criada pela equipe */
+  function criarExtra(q) {
+    var nome = 'extra_' + q.id;
+    var escolha = q.tipo === 'unica' || q.tipo === 'multipla';
+    var f = el('div', { 'class': 'field span-2', 'data-bloco': q.id, 'data-principal': true, 'data-extra': q.id,
+      'data-multipla': q.tipo === 'multipla', 'data-obrigatoria': q.tipo === 'multipla' && q.obrigatoria,
+      role: escolha ? (q.tipo === 'unica' ? 'radiogroup' : 'group') : null, 'aria-labelledby': escolha ? 'lbl-' + nome : null });
+    var rot = escolha ? el('span', { 'class': 'field-label', id: 'lbl-' + nome }, q.texto) : el('label', { 'for': nome }, q.texto);
+    if (!q.obrigatoria) { rot.appendChild(document.createTextNode(' ')); rot.appendChild(el('span', { 'class': 'opt' }, '(opcional)')); }
+    f.appendChild(rot);
+    if (q.ajuda) f.appendChild(el('p', { 'class': 'hint' }, q.ajuda));
+    if (escolha) {
+      var box = el('div', { 'class': 'choices' });
+      q.opcoes.forEach(function (o, i) {
+        var lab = el('label', { 'class': 'choice' });
+        lab.appendChild(el('input', { type: q.tipo === 'unica' ? 'radio' : 'checkbox', name: nome, value: o,
+          required: q.tipo === 'unica' && q.obrigatoria && i === 0, 'data-msg': q.tipo === 'unica' ? 'Selecione uma opção.' : 'Marque pelo menos uma opção.' }));
+        lab.appendChild(el('span', null, o));
+        box.appendChild(lab);
+      });
+      f.appendChild(box);
+    } else {
+      f.appendChild(el('input', { 'class': 'input', id: nome, name: nome, type: q.tipo === 'numero' ? 'number' : 'text',
+        inputmode: q.tipo === 'numero' ? 'numeric' : null, maxlength: q.tipo === 'numero' ? null : '1000',
+        required: q.obrigatoria, 'data-msg': q.tipo === 'numero' ? 'Informe um número.' : 'Preencha este campo.' }));
+    }
+    f.appendChild(el('span', { 'class': 'error-msg' }));
+    f._assinatura = JSON.stringify(q);
+    return f;
+  }
+
+  function aplicarFormulario(def) {
+    if (!def || !def.secoes) return;
+    var foco = document.activeElement;
+    var ids = {};
+    def.secoes.forEach(function (s) { s.itens.forEach(function (q) { ids[q.id] = true; }); });
+    // perguntas novas que saíram
+    form.querySelectorAll('[data-extra]').forEach(function (f) { if (!ids[f.getAttribute('data-extra')]) f.remove(); });
+    def.secoes.forEach(function (s) {
+      var fs = form.querySelector('[data-secao="' + s.id + '"]');
+      var grade = fs && fs.querySelector('.grid');
+      if (!grade) return;
+      s.itens.forEach(function (q) {
+        var els;
+        if (q.propria) {
+          var atual = form.querySelector('[data-extra="' + q.id + '"]');
+          if (atual && atual._assinatura !== JSON.stringify(q)) { atual.remove(); atual = null; }
+          els = [atual || criarExtra(q)];
+        } else {
+          els = Array.prototype.slice.call(blocoDe(q.id));
+          if (els.length) aplicarTexto(els[0], q.texto, q.ajuda);
+        }
+        els.forEach(function (e) {
+          grade.appendChild(e); // na ordem definida (move o que já existe, sem perder o que foi digitado)
+          if (q.ligada === false) { e.setAttribute('data-desligado', ''); e.hidden = true; }
+          else if (e.hasAttribute('data-desligado')) { e.removeAttribute('data-desligado'); e.hidden = false; }
+        });
+      });
+    });
+    // partes sem nenhuma pergunta somem; a numeração acompanha
+    var n = 0;
+    form.querySelectorAll('[data-secao]').forEach(function (fs) {
+      var tem = fs.querySelector('[data-principal]:not([data-desligado])');
+      fs.hidden = !tem;
+      if (tem) { n++; var num = fs.querySelector('legend .num'); if (num) num.textContent = n; }
+    });
+    form.querySelectorAll('input, select').forEach(apply);
+    atualizarCondicionais();
+    if (foco && foco !== document.activeElement && document.contains(foco)) { try { foco.focus({ preventScroll: true }); } catch (e) { /* ignora */ } }
+    versaoAplicada = def.versao;
+  }
+
+  function extrasPreenchidos(fd) {
+    var saida = {};
+    form.querySelectorAll('[data-extra]').forEach(function (f) {
+      if (f.hasAttribute('data-desligado')) return;
+      var id = f.getAttribute('data-extra');
+      var v = f.hasAttribute('data-multipla') ? fd.getAll('extra_' + id) : (fd.get('extra_' + id) || '').toString().trim();
+      if (v && v.length) saida[id] = v;
+    });
+    return saida;
+  }
+
+  function carregarFormulario() {
+    var usar = function (def) { try { if (def && def.versao !== versaoAplicada) aplicarFormulario(def); } catch (e) { /* fica o formulário de sempre */ } };
+    try { usar(JSON.parse(localStorage.getItem(CHAVE_CACHE) || 'null')); } catch (e) { /* sem cópia guardada */ }
+    if (!CONFIG.formulario || !window.fetch) return;
+    fetch(CONFIG.formulario, { cache: 'no-cache' })
+      .then(function (r) { return r.json(); })
+      .then(function (r) {
+        if (!r || !r.ok || !r.formulario) return;
+        if (form.hidden) return; // já enviou
+        usar(r.formulario);
+        try { localStorage.setItem(CHAVE_CACHE, JSON.stringify(r.formulario)); } catch (e) { /* ignora */ }
+      })
+      .catch(function () { /* sistema fora do ar: fica o formulário de sempre */ });
+  }
+
   /* ---------- Inicialização ---------- */
   // "Acorda" o servidor (plano gratuito dorme sem uso) enquanto a pessoa preenche o formulário.
   if (CONFIG.endpoint) {
@@ -387,4 +528,5 @@
     if (e.target.type === 'radio' || e.target.tagName === 'SELECT') atualizarCondicionais();
   });
   atualizarCondicionais();
+  carregarFormulario();
 })();

@@ -59,22 +59,22 @@
 
         <form id="form-cadastro" novalidate>
           <!-- 1. Sobre você -->
-          <fieldset class="form-section">
+          <fieldset class="form-section" data-secao="sobre">
             <legend><span class="num">1</span>Sobre você</legend>
             <div class="grid grid-2">
-              <div class="field span-2">
+              <div class="field span-2" data-bloco="nome" data-principal>
                 <label for="nome">Nome completo</label>
                 <input class="input" id="nome" name="nome" type="text" autocomplete="name" required minlength="5"
                        data-msg="Informe seu nome completo.">
                 <span class="error-msg"></span>
               </div>
-              <div class="field">
+              <div class="field" data-bloco="nascimento" data-principal>
                 <label for="nascimento">Data de nascimento</label>
                 <input class="input" id="nascimento" name="nascimento" type="date" autocomplete="bday" required min="1920-01-01"
                        data-msg="Informe uma data de nascimento válida.">
                 <span class="error-msg"></span>
               </div>
-              <div class="field">
+              <div class="field" data-bloco="religiao" data-principal>
                 <label for="religiao">Religião</label>
                 <select class="select" id="religiao" name="religiao" required data-msg="Selecione uma opção.">
                   <option value="">Selecione</option>
@@ -89,12 +89,12 @@
                 </select>
                 <span class="error-msg"></span>
               </div>
-              <div class="field span-2 reveal-box" data-show-if="religiao=__outra">
+              <div class="field span-2 reveal-box" data-bloco="religiao" data-show-if="religiao=__outra">
                 <label for="religiao_outra">Qual religião?</label>
                 <input class="input" id="religiao_outra" name="religiao_outra" type="text" required data-msg="Escreva sua religião.">
                 <span class="error-msg"></span>
               </div>
-              <div class="field span-2" role="radiogroup" aria-labelledby="lbl-genero">
+              <div class="field span-2" data-bloco="genero" data-principal role="radiogroup" aria-labelledby="lbl-genero">
                 <span class="field-label" id="lbl-genero">Gênero</span>
                 <div class="choices">
                   <label class="choice"><input type="radio" name="genero" value="Feminino" required data-msg="Selecione uma opção."><span>Feminino</span></label>
@@ -105,13 +105,14 @@
                 </div>
                 <span class="error-msg"></span>
               </div>
-              <div class="field span-2 reveal-box" data-show-if="genero=__outro">
+              <div class="field span-2 reveal-box" data-bloco="genero" data-show-if="genero=__outro">
                 <label for="genero_outro">Como você se identifica?</label>
                 <input class="input" id="genero_outro" name="genero_outro" type="text" required data-msg="Preencha este campo.">
                 <span class="error-msg"></span>
               </div>
-              <div class="field span-2" role="radiogroup" aria-labelledby="lbl-cor">
-                <span class="field-label" id="lbl-cor">Cor / raça <span class="opt">(classificação do IBGE)</span></span>
+              <div class="field span-2" data-bloco="cor_raca" data-principal role="radiogroup" aria-labelledby="lbl-cor">
+                <span class="field-label" id="lbl-cor">Cor / raça</span>
+                <p class="hint">Classificação do IBGE</p>
                 <div class="choices">
                   <label class="choice"><input type="radio" name="cor_raca" value="Branca" required data-msg="Selecione uma opção."><span>Branca</span></label>
                   <label class="choice"><input type="radio" name="cor_raca" value="Preta"><span>Preta</span></label>
@@ -126,10 +127,10 @@
           </fieldset>
 
           <!-- 2. Estudo e trabalho -->
-          <fieldset class="form-section">
+          <fieldset class="form-section" data-secao="estudo">
             <legend><span class="num">2</span>Estudo e trabalho</legend>
             <div class="grid grid-2">
-              <div class="field span-2">
+              <div class="field span-2" data-bloco="escolaridade" data-principal>
                 <label for="escolaridade">Escolaridade</label>
                 <select class="select" id="escolaridade" name="escolaridade" required data-msg="Selecione sua escolaridade.">
                   <option value="">Selecione</option>
@@ -147,7 +148,7 @@
                 </select>
                 <span class="error-msg"></span>
               </div>
-              <div class="field span-2" role="radiogroup" aria-labelledby="lbl-prof">
+              <div class="field span-2" data-bloco="profissao" data-principal role="radiogroup" aria-labelledby="lbl-prof">
                 <span class="field-label" id="lbl-prof">Profissão / ocupação</span>
                 <div class="choices">
                   <label class="choice"><input type="radio" name="profissao" value="Vendedor(a)" required data-msg="Selecione uma opção."><span>Vendedor(a)</span></label>
@@ -156,19 +157,19 @@
                 </div>
                 <span class="error-msg"></span>
               </div>
-              <div class="field span-2 reveal-box" data-show-if="profissao=Vendedor(a)">
+              <div class="field span-2 reveal-box" data-bloco="profissao" data-show-if="profissao=Vendedor(a)">
                 <label for="vendedor_o_que">O que você vende?</label>
                 <input class="input" id="vendedor_o_que" name="vendedor_o_que" type="text" required
                        placeholder="Ex.: roupas, cosméticos, carros, seguros, alimentos" data-msg="Conte o que você vende.">
                 <span class="error-msg"></span>
               </div>
-              <div class="field span-2 reveal-box" data-show-if="profissao=Autônomo(a)">
+              <div class="field span-2 reveal-box" data-bloco="profissao" data-show-if="profissao=Autônomo(a)">
                 <label for="autonomo_o_que">O que você faz como autônomo(a)?</label>
                 <input class="input" id="autonomo_o_que" name="autonomo_o_que" type="text" required
                        placeholder="Ex.: eletricista, manicure, motorista de aplicativo, confeiteira" data-msg="Conte o que você faz.">
                 <span class="error-msg"></span>
               </div>
-              <div class="field span-2 reveal-box" data-show-if="profissao=__outra">
+              <div class="field span-2 reveal-box" data-bloco="profissao" data-show-if="profissao=__outra">
                 <label for="profissao_outra">Qual é a sua profissão?</label>
                 <input class="input" id="profissao_outra" name="profissao_outra" type="text" required data-msg="Escreva sua profissão.">
                 <span class="error-msg"></span>
@@ -177,17 +178,17 @@
           </fieldset>
 
           <!-- 3. Onde você mora -->
-          <fieldset class="form-section">
+          <fieldset class="form-section" data-secao="mora">
             <legend><span class="num">3</span>Onde você mora</legend>
             <div class="grid grid-3">
-              <div class="field">
+              <div class="field" data-bloco="endereco" data-principal>
                 <label for="estado">Estado</label>
                 <select class="select" id="estado" name="estado" required autocomplete="address-level1" data-msg="Selecione o estado.">
                   <option value="">Selecione</option>
                 </select>
                 <span class="error-msg"></span>
               </div>
-              <div class="field" id="f-cidade">
+              <div class="field" data-bloco="endereco" id="f-cidade">
                 <label for="cidade">Cidade</label>
                 <select class="select" id="cidade" name="cidade" required disabled data-msg="Selecione a cidade.">
                   <option value="">Escolha o estado</option>
@@ -195,7 +196,7 @@
                 <input class="input" id="cidade_texto" name="cidade_texto" type="text" required hidden disabled autocomplete="address-level2" data-msg="Informe a cidade.">
                 <span class="error-msg"></span>
               </div>
-              <div class="field" id="f-bairro">
+              <div class="field" data-bloco="endereco" id="f-bairro">
                 <label for="bairro">Bairro</label>
                 <select class="select" id="bairro" name="bairro" required disabled data-msg="Selecione o bairro.">
                   <option value="">Escolha a cidade</option>
@@ -203,7 +204,7 @@
                 <input class="input" id="bairro_texto" name="bairro_texto" type="text" required hidden disabled data-msg="Informe o bairro.">
                 <span class="error-msg"></span>
               </div>
-              <div class="field span-2 reveal-box" data-show-if="bairro=__outro">
+              <div class="field span-2 reveal-box" data-bloco="endereco" data-show-if="bairro=__outro">
                 <label for="bairro_outro">Qual bairro?</label>
                 <input class="input" id="bairro_outro" name="bairro_outro" type="text" required data-msg="Informe o bairro.">
                 <span class="error-msg"></span>
@@ -212,10 +213,10 @@
           </fieldset>
 
           <!-- 4. Onde você nasceu -->
-          <fieldset class="form-section">
+          <fieldset class="form-section" data-secao="nasceu">
             <legend><span class="num">4</span>Onde você nasceu</legend>
             <div class="grid grid-2">
-              <div class="field span-2" role="radiogroup" aria-labelledby="lbl-nasc">
+              <div class="field span-2" data-bloco="naturalidade" data-principal role="radiogroup" aria-labelledby="lbl-nasc">
                 <span class="field-label" id="lbl-nasc">Você nasceu no Brasil?</span>
                 <div class="choices">
                   <label class="choice"><input type="radio" name="nasceu_brasil" value="Sim" required data-msg="Selecione uma opção."><span>Sim</span></label>
@@ -223,14 +224,14 @@
                 </div>
                 <span class="error-msg"></span>
               </div>
-              <div class="field reveal-box" data-show-if="nasceu_brasil=Sim">
+              <div class="field reveal-box" data-bloco="naturalidade" data-show-if="nasceu_brasil=Sim">
                 <label for="nat_estado">Estado onde nasceu</label>
                 <select class="select" id="nat_estado" name="nat_estado" required data-msg="Selecione o estado.">
                   <option value="">Selecione</option>
                 </select>
                 <span class="error-msg"></span>
               </div>
-              <div class="field reveal-box" data-show-if="nasceu_brasil=Sim" id="f-nat-cidade">
+              <div class="field reveal-box" data-bloco="naturalidade" data-show-if="nasceu_brasil=Sim" id="f-nat-cidade">
                 <label for="nat_cidade">Cidade onde nasceu</label>
                 <select class="select" id="nat_cidade" name="nat_cidade" required disabled data-msg="Selecione a cidade.">
                   <option value="">Escolha o estado</option>
@@ -238,12 +239,12 @@
                 <input class="input" id="nat_cidade_texto" name="nat_cidade_texto" type="text" required hidden disabled data-msg="Informe a cidade.">
                 <span class="error-msg"></span>
               </div>
-              <div class="field reveal-box" data-show-if="nasceu_brasil=Não">
+              <div class="field reveal-box" data-bloco="naturalidade" data-show-if="nasceu_brasil=Não">
                 <label for="nat_pais">País onde nasceu</label>
                 <input class="input" id="nat_pais" name="nat_pais" type="text" required autocomplete="country-name" data-msg="Informe o país.">
                 <span class="error-msg"></span>
               </div>
-              <div class="field reveal-box" data-show-if="nasceu_brasil=Não">
+              <div class="field reveal-box" data-bloco="naturalidade" data-show-if="nasceu_brasil=Não">
                 <label for="nat_cidade_ext">Cidade onde nasceu</label>
                 <input class="input" id="nat_cidade_ext" name="nat_cidade_ext" type="text" required data-msg="Informe a cidade.">
                 <span class="error-msg"></span>
@@ -252,10 +253,10 @@
           </fieldset>
 
           <!-- 5. Família -->
-          <fieldset class="form-section">
+          <fieldset class="form-section" data-secao="familia">
             <legend><span class="num">5</span>Família</legend>
             <div class="grid grid-2">
-              <div class="field span-2" role="radiogroup" aria-labelledby="lbl-filhos">
+              <div class="field span-2" data-bloco="filhos" data-principal role="radiogroup" aria-labelledby="lbl-filhos">
                 <span class="field-label" id="lbl-filhos">Você tem filhos?</span>
                 <div class="choices">
                   <label class="choice"><input type="radio" name="tem_filhos" value="Sim" required data-msg="Selecione uma opção."><span>Sim</span></label>
@@ -263,7 +264,7 @@
                 </div>
                 <span class="error-msg"></span>
               </div>
-              <div class="field reveal-box" data-show-if="tem_filhos=Sim">
+              <div class="field reveal-box" data-bloco="filhos" data-show-if="tem_filhos=Sim">
                 <label for="qtd_filhos">Quantos filhos?</label>
                 <select class="select" id="qtd_filhos" name="qtd_filhos" required data-msg="Selecione a quantidade.">
                   <option value="">Selecione</option>
@@ -272,7 +273,7 @@
                 </select>
                 <span class="error-msg"></span>
               </div>
-              <div class="field span-2" id="f-idades" hidden>
+              <div class="field span-2" data-bloco="filhos" id="f-idades" hidden>
                 <span class="field-label">Idade de cada filho <span class="opt">(em anos; use 0 para menores de 1 ano)</span></span>
                 <div class="kids-ages" id="idades"></div>
                 <span class="error-msg"></span>
@@ -281,10 +282,10 @@
           </fieldset>
 
           <!-- 6. Renda e contato -->
-          <fieldset class="form-section">
+          <fieldset class="form-section" data-secao="contato">
             <legend><span class="num">6</span>Renda e contato</legend>
             <div class="grid grid-2">
-              <div class="field span-2">
+              <div class="field span-2" data-bloco="renda" data-principal>
                 <label for="renda">Renda familiar mensal</label>
                 <p class="hint">Soma da renda de todas as pessoas que moram na sua casa.</p>
                 <select class="select" id="renda" name="renda" required data-msg="Selecione uma faixa de renda.">
@@ -300,13 +301,13 @@
                 </select>
                 <span class="error-msg"></span>
               </div>
-              <div class="field">
+              <div class="field" data-bloco="telefone" data-principal>
                 <label for="telefone">Telefone / WhatsApp</label>
                 <input class="input" id="telefone" name="telefone" type="tel" inputmode="numeric" autocomplete="tel-national"
                        placeholder="(41) 99999-9999" required pattern="\(\d{2}\) \d{4,5}-\d{4}" data-msg="Informe o telefone com DDD.">
                 <span class="error-msg"></span>
               </div>
-              <div class="field">
+              <div class="field" data-bloco="email" data-principal>
                 <label for="email">E-mail</label>
                 <input class="input" id="email" name="email" type="email" autocomplete="email" placeholder="voce@email.com"
                        required data-msg="Informe um e-mail válido.">

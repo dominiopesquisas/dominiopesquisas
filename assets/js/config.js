@@ -1,6 +1,7 @@
 /**
  * CONFIGURAÇÃO DO SITE
- * sistema:   endereço do sistema Domínio Pesquisas (recebe cadastros e informa as pesquisas abertas).
+ * sistema:   endereço do sistema Domínio Pesquisas (recebe cadastros, informa as pesquisas abertas
+ *            e as perguntas do formulário de cadastro, definidas na tela "Formulário do site").
  * No computador de desenvolvimento (localhost) usa o sistema rodando localmente.
  */
 (function () {
@@ -9,6 +10,7 @@
   window.DP_CONFIG = {
     endpoint: sistema + '/api/publico/cadastro',
     projetos: sistema + '/api/publico/projetos',
+    formulario: sistema + '/api/publico/formulario',
     grupoWhatsapp: (location.pathname.indexOf('/cadastro') >= 0 ? '../' : '') + 'grupowhatsapp/',
   };
 })();
