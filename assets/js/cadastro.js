@@ -405,7 +405,9 @@
     var rot = principal.querySelector('label, .field-label');
     if (rot && texto) {
       if (rot._orig == null) rot._orig = rot.textContent;
+      var opt = rot.querySelector('.opt'); // "(opcional)" continua depois do texto definido pela equipe
       rot.textContent = texto;
+      if (opt) { rot.appendChild(document.createTextNode(' ')); rot.appendChild(opt); }
     }
     var hint = principal.querySelector('.hint');
     if (ajuda) {
