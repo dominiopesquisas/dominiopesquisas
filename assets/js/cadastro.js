@@ -355,7 +355,7 @@
       return;
     }
     if (!CONFIG.endpoint) {
-      mostrarAlerta('O formulário ainda não está conectado à planilha. Fale com a gente pelo WhatsApp <a href="https://wa.me/5541997526552">(41) 99752-6552</a>.');
+      mostrarAlerta('O formulário ainda não está conectado à planilha. Fale com a gente pelo WhatsApp <a href="https://wa.me/5541997526552?text=Ol%C3%A1!%20Tentei%20fazer%20meu%20cadastro%20no%20site%20da%20Dom%C3%ADnio%20Pesquisas%2C%20mas%20n%C3%A3o%20consegui%20enviar.">(41) 99752-6552</a>.');
       return;
     }
 
@@ -376,7 +376,7 @@
         sucesso(d.nome, res);
       })
       .catch(function () {
-        mostrarAlerta('Não conseguimos enviar seu cadastro agora. Verifique sua internet e tente de novo. Se o problema continuar, fale com a gente pelo WhatsApp <a href="https://wa.me/5541997526552">(41) 99752-6552</a>.');
+        mostrarAlerta('Não conseguimos enviar seu cadastro agora. Verifique sua internet e tente de novo. Se o problema continuar, fale com a gente pelo WhatsApp <a href="https://wa.me/5541997526552?text=Ol%C3%A1!%20Tentei%20fazer%20meu%20cadastro%20no%20site%20da%20Dom%C3%ADnio%20Pesquisas%2C%20mas%20n%C3%A3o%20consegui%20enviar.">(41) 99752-6552</a>.');
       })
       .finally(function () {
         clearTimeout(timer);
