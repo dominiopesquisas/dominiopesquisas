@@ -1,4 +1,6 @@
 # Publica o site no GitHub Pages a cada alteração na branch main.
+# Duas etapas (montar e publicar), como no modelo oficial do GitHub: com as duas no mesmo passo, a publicação às vezes
+# não achava o pacote recém-enviado ("No artifacts named github-pages were found").
 name: Publicar site
 on:
   push:
@@ -12,16 +14,20 @@ concurrency:
   group: pages
   cancel-in-progress: false
 jobs:
-  publicar:
+  montar:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
+  publicar:
+    needs: montar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
       - id: deploy
         uses: actions/deploy-pages@v4
