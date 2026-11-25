@@ -281,7 +281,8 @@
     var nasceuBR = g('nasceu_brasil') === 'Sim';
     var uf = g('estado');
     return {
-      projeto: projeto ? projeto.titulo + (projeto.local ? ' (' + projeto.local + ')' : '') : projetoId,
+      // o sistema acha a pesquisa pelo código do link (?projeto=); o título não serve para isso
+      projeto: projetoId,
       nome: g('nome'),
       nascimento: g('nascimento'),
       genero: outro('genero', '__outro', 'genero_outro'),
@@ -325,12 +326,22 @@
     if (res.novo === false) {
       msg.textContent = 'Obrigado' + (primeiro ? ', ' + primeiro : '') + '! Você já tinha cadastro com a gente. Para sua segurança, nada foi trocado automaticamente: nossa equipe confere os dados enviados. '
         + (res.projeto ? 'Sua inscrição na pesquisa "' + res.projeto + '" foi registrada e vamos te mandar o convite pelo WhatsApp.' : 'Vamos entrar em contato quando houver uma pesquisa para você.');
+    } else if (res.convite && res.porTelefone) {
+      // pesquisa em que as perguntas são feitas pela equipe, por telefone: o link pede só as datas
+      msg.textContent = 'Obrigado' + (primeiro ? ', ' + primeiro : '') + '! Agora falta pouco: diga em quais datas você pode participar da pesquisa.';
     } else if (res.convite) {
       msg.textContent = 'Obrigado' + (primeiro ? ', ' + primeiro : '') + '! Agora falta pouco: responda as perguntas da pesquisa' + (res.projeto ? ' "' + res.projeto + '"' : '') + ' para a equipe ver se o seu perfil combina.';
     } else {
       $('primeiro-nome').textContent = primeiro || 'pelo cadastro';
     }
-    if (res.convite) { $('link-convite').href = res.convite; $('passo-pesquisa').hidden = false; }
+    if (res.convite) {
+      $('link-convite').href = res.convite;
+      if (res.porTelefone) {
+        $('rotulo-convite').textContent = 'Informar as datas';
+        $('icone-convite').setAttribute('href', '../assets/img/icons.svg#i-calendar');
+      }
+      $('passo-pesquisa').hidden = false;
+    }
     if (res.app) { $('link-app').href = res.app; $('passo-app').hidden = false; $('dica-app').hidden = false; }
     if (CONFIG.grupoWhatsapp) $('link-grupo').href = CONFIG.grupoWhatsapp;
     var s = $('sucesso');
