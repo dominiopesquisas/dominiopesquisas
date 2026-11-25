@@ -23,7 +23,7 @@
      (data-desligado) ou quando o próprio script não o quer ativo. */
   function apply(el) {
     var box = el.closest('.reveal-box');
-    var visible = !el.hidden && !(box && !box.classList.contains('is-shown')) && !el.closest('[data-desligado]');
+    var visible = !el.hidden && !(box && !box.classList.contains('is-shown')) && !el.closest('[data-desligado], [data-escondido]');
     el.disabled = !(visible && el._want !== false);
   }
   function setActive(el, want) { el._want = want; apply(el); }
@@ -147,6 +147,18 @@
       box.querySelectorAll('input, select').forEach(apply);
       if (!show) box.classList.remove('is-invalid');
     });
+    // perguntas criadas pela equipe com "Mostrar só se…": aparecem só para quem deu uma das respostas na pergunta de cima.
+    // Na ordem da página: se a de cima está escondida, as respostas dela não contam e a de baixo some também.
+    form.querySelectorAll('[data-extra]').forEach(function (f) {
+      var c = f._cond;
+      if (!c) return;
+      var marcadas = Array.prototype.filter.call(form.querySelectorAll('[name="extra_' + c.pergunta + '"]'), function (x) { return !x.disabled && x.checked; })
+        .map(function (x) { return x.value; });
+      var show = marcadas.some(function (v) { return c.respostas.indexOf(v) >= 0; });
+      if (show) f.removeAttribute('data-escondido'); else { f.setAttribute('data-escondido', ''); f.classList.remove('is-invalid'); }
+      f.hidden = !show || f.hasAttribute('data-desligado');
+      f.querySelectorAll('input, select').forEach(apply);
+    });
     atualizarIdades();
   }
 
@@ -182,10 +194,26 @@
     tel.value = out;
   });
 
+  /* ---------- Data de nascimento: só digitar (sem o calendário do celular), as barras entram sozinhas ---------- */
+  var nasc = $('nascimento');
+  nasc.addEventListener('input', function () {
+    var v = nasc.value;
+    var iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v); // preenchimento automático do navegador pode vir assim
+    if (iso) v = iso[3] + iso[2] + iso[1];
+    var d = v.replace(/\D/g, '').slice(0, 8);
+    nasc.value = d.length > 4 ? d.slice(0, 2) + '/' + d.slice(2, 4) + '/' + d.slice(4) : d.length > 2 ? d.slice(0, 2) + '/' + d.slice(2) : d;
+  });
+  /* "25/03/1980" → "1980-03-25"; data que não existe, antes de 1920 ou no futuro → '' */
+  function nascimentoISO(v) {
+    var m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec((v || '').trim());
+    if (!m) return '';
+    var dt = new Date(Date.UTC(+m[3], +m[2] - 1, +m[1]));
+    if (dt.getUTCDate() !== +m[1] || dt.getUTCMonth() !== +m[2] - 1) return ''; // ex.: 31/02
+    if (+m[3] < 1920 || dt.getTime() > Date.now()) return '';
+    return m[3] + '-' + m[2] + '-' + m[1];
+  }
+
   /* ---------- Validação ---------- */
-  var hoje = new Date();
-  var hojeISO = new Date(hoje.getTime() - hoje.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-  $('nascimento').max = hojeISO;
 
   function fieldDe(el) { return el.closest('.field'); }
   function marcar(el, ok) {
@@ -201,6 +229,7 @@
     if (el.name === 'nome') el.value = el.value.replace(/\s+/g, ' ').trimStart();
     if (!el.checkValidity()) return false;
     if (el.name === 'nome' && el.value.trim().split(' ').length < 2) return false;
+    if (el.name === 'nascimento' && !nascimentoISO(el.value)) return false;
     return true;
   }
   function controlesAtivos() {
@@ -322,7 +351,7 @@
       // o sistema acha a pesquisa pelo código do link (?projeto=); o título não serve para isso
       projeto: projetoId,
       nome: g('nome'),
-      nascimento: g('nascimento'),
+      nascimento: nascimentoISO(g('nascimento')),
       genero: outro('genero', '__outro', 'genero_outro'),
       cor_raca: g('cor_raca'),
       religiao: outro('religiao', '__outra', 'religiao_outra'),
@@ -363,10 +392,21 @@
     var primeiro = (nome || '').split(' ')[0] || '';
     var msg = $('msg-sucesso');
     $('secao-datas').hidden = true;
-    // já tinha cadastro: nada é trocado (a equipe confere o que veio diferente)
+    var obrigado = 'Obrigado' + (primeiro ? ', ' + primeiro : '') + '! ';
+    // já tinha cadastro: o cadastro não é trocado sozinho (a equipe confere o que veio diferente); sem links pessoais na tela
     if (res.novo === false) {
-      msg.textContent = 'Obrigado' + (primeiro ? ', ' + primeiro : '') + '! Você já tinha cadastro com a gente. Para sua segurança, nada foi trocado automaticamente: nossa equipe confere os dados enviados. '
-        + (res.projeto ? 'Sua inscrição na pesquisa "' + res.projeto + '" foi registrada e vamos te mandar o convite pelo WhatsApp.' : 'Vamos entrar em contato quando houver uma pesquisa para você.');
+      var jaTinha = obrigado + 'Você já tinha cadastro com a gente; se algum dado mudou, a nossa equipe confere. ';
+      if (res.situacao) {
+        // pesquisa por telefone, com as datas marcadas: "Inscrição recebida", o mesmo texto do app
+        $('sucesso-titulo').textContent = res.situacao.titulo;
+        msg.textContent = jaTinha + res.situacao.texto;
+      } else if (res.projeto) {
+        // (também para quem já estava na pesquisa: o sistema não conta isso, porque pode ser outra pessoa com o telefone)
+        msg.textContent = jaTinha + 'Sua inscrição nesta pesquisa foi registrada. '
+          + (res.porTelefone ? 'Se o seu perfil combinar, a nossa equipe entra em contato.' : 'Vamos te mandar pelo WhatsApp o link para responder as perguntas.');
+      } else {
+        msg.textContent = jaTinha + 'Vamos entrar em contato quando houver uma pesquisa para você.';
+      }
     } else if (res.situacao) {
       // pesquisa por telefone, com as datas já no formulário: "Inscrição recebida" direto (texto do sistema, o mesmo do app)
       $('sucesso-titulo').textContent = res.situacao.titulo;
@@ -502,6 +542,7 @@
     }
     f.appendChild(el('span', { 'class': 'error-msg' }));
     f._assinatura = JSON.stringify(q);
+    f._cond = q.mostrarSe || null; // "Mostrar só se…" (atualizarCondicionais)
     return f;
   }
 
@@ -550,7 +591,7 @@
   function extrasPreenchidos(fd) {
     var saida = {};
     form.querySelectorAll('[data-extra]').forEach(function (f) {
-      if (f.hasAttribute('data-desligado')) return;
+      if (f.hasAttribute('data-desligado') || f.hasAttribute('data-escondido')) return;
       var id = f.getAttribute('data-extra');
       var v = f.hasAttribute('data-multipla') ? fd.getAll('extra_' + id) : (fd.get('extra_' + id) || '').toString().trim();
       if (v && v.length) saida[id] = v;
@@ -586,7 +627,7 @@
   setActive(bairro, false); setActive(bairroTxt, false);
   setActive($('nat_cidade'), false); setActive($('nat_cidade_texto'), false);
   form.addEventListener('change', function (e) {
-    if (e.target.type === 'radio' || e.target.tagName === 'SELECT') atualizarCondicionais();
+    if (e.target.type === 'radio' || e.target.type === 'checkbox' || e.target.tagName === 'SELECT') atualizarCondicionais();
   });
   atualizarCondicionais();
   carregarFormulario();

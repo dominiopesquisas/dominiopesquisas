@@ -70,8 +70,10 @@
               </div>
               <div class="field" data-bloco="nascimento" data-principal>
                 <label for="nascimento">Data de nascimento</label>
-                <input class="input" id="nascimento" name="nascimento" type="date" autocomplete="bday" required min="1920-01-01"
-                       data-msg="Informe uma data de nascimento válida.">
+                <p class="hint" id="nascimento-ajuda">Digite só os números, por exemplo: 25/03/1980</p>
+                <input class="input" id="nascimento" name="nascimento" type="text" inputmode="numeric" autocomplete="bday"
+                       maxlength="10" placeholder="dd/mm/aaaa" required aria-describedby="nascimento-ajuda"
+                       data-msg="Digite a data assim: 25/03/1980.">
                 <span class="error-msg"></span>
               </div>
               <div class="field" data-bloco="religiao" data-principal>
