@@ -261,13 +261,51 @@
   var params = new URLSearchParams(location.search);
   var projetoId = params.get('projeto') || '';
   var projeto = null;
-  if (projetoId && window.carregarProjetos) {
+  var folhas = null; // "Em quais datas você pode?" (pesquisa por telefone): folhinhas servidas pelo sistema
+  function mostrarBanner() {
+    if (projeto && !form.hidden) {
+      $('nome-projeto').textContent = projeto.titulo + (projeto.local ? ' (' + projeto.local + ')' : '');
+      $('banner-projeto').hidden = false;
+    }
+  }
+  /* O componente das folhinhas mora no sistema (o mesmo do convite): carrega o estilo e o script de lá, só quando precisa. */
+  function carregarFolhinhas(pronto) {
+    if (window.Folhinhas) { pronto(); return; }
+    var css = document.createElement('link');
+    css.rel = 'stylesheet'; css.href = CONFIG.sistema + '/assets/css/folhinhas.css';
+    document.head.appendChild(css);
+    var js = document.createElement('script');
+    js.src = CONFIG.sistema + '/assets/js/folhinhas.js';
+    js.onload = function () { if (window.Folhinhas) pronto(); }; // sem o script, o envio segue sem as datas (o convite pede depois)
+    document.body.appendChild(js);
+  }
+  function mostrarDatas(sessoes) {
+    carregarFolhinhas(function () {
+      if (form.hidden) return;
+      // o bloco é "várias respostas, obrigatória" (data-multipla data-obrigatoria): pelo menos uma data, como as outras perguntas
+      folhas = window.Folhinhas.montar($('folhinhas'), sessoes, { nome: '__datas' });
+      $('secao-datas').hidden = false;
+      numerarDatas();
+    });
+  }
+  // o bloco das datas é sempre o último: o número vem depois das partes que estão à vista
+  function numerarDatas() {
+    $('num-datas').textContent = form.querySelectorAll('[data-secao]:not([hidden])').length + 1;
+  }
+  if (projetoId && CONFIG.projeto && window.fetch) {
+    fetch(CONFIG.projeto + encodeURIComponent(projetoId))
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d || !d.ok || !d.projeto || !d.projeto.aberta) return;
+        projeto = d.projeto;
+        mostrarBanner();
+        if (projeto.porTelefone && projeto.sessoes && projeto.sessoes.length) mostrarDatas(projeto.sessoes);
+      })
+      .catch(function () { /* sem o sistema, o formulário segue normal */ });
+  } else if (projetoId && window.carregarProjetos) {
     window.carregarProjetos().then(function (lista) {
       projeto = lista.filter(function (p) { return p.id === projetoId; })[0] || null;
-      if (projeto && !form.hidden) {
-        $('nome-projeto').textContent = projeto.titulo + (projeto.local ? ' (' + projeto.local + ')' : '');
-        $('banner-projeto').hidden = false;
-      }
+      mostrarBanner();
     });
   }
 
@@ -307,6 +345,8 @@
       consentimento: g('consentimento') === 'Sim' ? 'Sim' : 'Não',
       website: (document.getElementById('website').value || ''),
       origem: location.href,
+      // pesquisa por telefone: as datas em que a pessoa pode (sem o bloco, o campo não vai e o convite pede as datas)
+      disponibilidade: folhas && !$('secao-datas').hidden ? folhas.marcadas() : undefined,
       extras: extrasPreenchidos(fd),
       formularioVersao: versaoAplicada,
     };
@@ -322,10 +362,15 @@
     esconderAlerta();
     var primeiro = (nome || '').split(' ')[0] || '';
     var msg = $('msg-sucesso');
+    $('secao-datas').hidden = true;
     // já tinha cadastro: nada é trocado (a equipe confere o que veio diferente)
     if (res.novo === false) {
       msg.textContent = 'Obrigado' + (primeiro ? ', ' + primeiro : '') + '! Você já tinha cadastro com a gente. Para sua segurança, nada foi trocado automaticamente: nossa equipe confere os dados enviados. '
         + (res.projeto ? 'Sua inscrição na pesquisa "' + res.projeto + '" foi registrada e vamos te mandar o convite pelo WhatsApp.' : 'Vamos entrar em contato quando houver uma pesquisa para você.');
+    } else if (res.situacao) {
+      // pesquisa por telefone, com as datas já no formulário: "Inscrição recebida" direto (texto do sistema, o mesmo do app)
+      $('sucesso-titulo').textContent = res.situacao.titulo;
+      msg.textContent = 'Obrigado' + (primeiro ? ', ' + primeiro : '') + '! ' + res.situacao.texto;
     } else if (res.convite && res.porTelefone) {
       // pesquisa em que as perguntas são feitas pela equipe, por telefone: o link pede só as datas
       msg.textContent = 'Obrigado' + (primeiro ? ', ' + primeiro : '') + '! Agora falta pouco: diga em quais datas você pode participar da pesquisa.';
@@ -383,10 +428,12 @@
     })
       .then(function (r) { return r.json(); })
       .then(function (res) {
-        if (!res || !res.ok) throw new Error((res && res.erro) || 'Falha no envio');
+        if (!res || !res.ok) { var erro = new Error((res && res.erro) || 'Falha no envio'); erro.doSistema = !!(res && res.erro); throw erro; }
         sucesso(d.nome, res);
       })
-      .catch(function () {
+      .catch(function (e) {
+        // o sistema disse o que falta (ex.: "Marque pelo menos uma data"): mostra a frase dele
+        if (e && e.doSistema) { mostrarAlerta(''); alertaTxt.textContent = e.message; return; }
         mostrarAlerta('Não conseguimos enviar seu cadastro agora. Verifique sua internet e tente de novo. Se o problema continuar, fale com a gente pelo WhatsApp <a href="https://wa.me/5541997526552?text=Ol%C3%A1!%20Tentei%20fazer%20meu%20cadastro%20no%20site%20da%20Dom%C3%ADnio%20Pesquisas%2C%20mas%20n%C3%A3o%20consegui%20enviar.">(41) 99752-6552</a>.');
       })
       .finally(function () {
@@ -493,6 +540,7 @@
       fs.hidden = !tem;
       if (tem) { n++; var num = fs.querySelector('legend .num'); if (num) num.textContent = n; }
     });
+    numerarDatas();
     form.querySelectorAll('input, select').forEach(apply);
     atualizarCondicionais();
     if (foco && foco !== document.activeElement && document.contains(foco)) { try { foco.focus({ preventScroll: true }); } catch (e) { /* ignora */ } }

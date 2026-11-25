@@ -316,6 +316,19 @@
             </div>
           </fieldset>
 
+          <!-- pesquisa por telefone (link ?projeto=): as datas são o último bloco, antes de enviar (folhinhas do sistema) -->
+          <fieldset class="form-section" id="secao-datas" hidden>
+            <legend><span class="num" id="num-datas">7</span>Datas da pesquisa</legend>
+            <div class="grid">
+              <div class="field" id="campo-datas" data-multipla data-obrigatoria>
+                <span class="field-label" id="l-datas">Em quais datas você pode?</span>
+                <p class="hint">Marque todos os horários em que puder participar.</p>
+                <div role="group" aria-labelledby="l-datas" id="folhinhas" data-msg="Marque pelo menos uma data."></div>
+                <span class="error-msg"></span>
+              </div>
+            </div>
+          </fieldset>
+
           <div class="field" style="margin-bottom:24px">
             <label class="consent">
               <input type="checkbox" id="consentimento" name="consentimento" value="Sim" required data-msg="Para continuar, é preciso concordar.">
@@ -340,7 +353,7 @@
 
         <div class="success" id="sucesso" hidden tabindex="-1">
           <div class="success-icon"><svg aria-hidden="true"><use href="../assets/img/icons.svg#i-check"></use></svg></div>
-          <h2>Cadastro recebido!</h2>
+          <h2 id="sucesso-titulo">Cadastro recebido!</h2>
           <p id="msg-sucesso">Obrigado, <span id="primeiro-nome"></span>. Vamos analisar seu perfil e entraremos em contato quando houver uma pesquisa para você. Enquanto isso, entre no nosso grupo do WhatsApp para acompanhar as novidades.</p>
           <div class="hero-actions" id="passo-pesquisa" hidden>
             <a class="btn btn--primary" id="link-convite" href="#">
