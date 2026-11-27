@@ -295,6 +295,13 @@
     if (projeto && !form.hidden) {
       $('nome-projeto').textContent = projeto.titulo + (projeto.local ? ' (' + projeto.local + ')' : '');
       $('banner-projeto').hidden = false;
+      // só o "link com o questionário" (o sistema manda comQuestionario): avisa as duas partes e o botão diz para onde vai.
+      // O link de sempre da pesquisa não recebe esse campo e fica exatamente como era.
+      if (projeto.comQuestionario === true) {
+        $('aviso-duas-partes').hidden = false;
+        btn.firstChild.nodeValue = btn.firstChild.nodeValue.replace('Enviar cadastro', 'Enviar e ir para as perguntas');
+        btnHTML = btn.innerHTML;
+      }
     }
   }
   /* O componente das folhinhas mora no sistema (o mesmo do convite): carrega o estilo e o script de lá, só quando precisa. */
@@ -421,7 +428,9 @@
     }
     if (res.convite) {
       $('link-convite').href = res.convite;
-      if (res.porTelefone) {
+      if (res.comQuestionario === true) {
+        $('rotulo-convite').textContent = 'Responder as perguntas (parte 2)';
+      } else if (res.porTelefone) {
         $('rotulo-convite').textContent = 'Informar as datas';
         $('icone-convite').setAttribute('href', '../assets/img/icons.svg#i-calendar');
       }
