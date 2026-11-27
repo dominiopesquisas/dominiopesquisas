@@ -442,6 +442,9 @@
     s.hidden = false;
     $('card').scrollIntoView({ behavior: 'smooth', block: 'start' });
     s.focus({ preventScroll: true });
+    // "link com o questionário": os dados já foram gravados; abre direto as perguntas (parte 2), sem mais um clique.
+    // A tela acima fica de reserva, com o botão "Responder as perguntas (parte 2)", se a página não abrir.
+    if (res.comQuestionario === true && res.convite) location.assign(res.convite);
   }
 
   form.addEventListener('submit', function (e) {
